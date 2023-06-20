@@ -697,6 +697,16 @@ class GaussianDiffusion1D(nn.Module):
         return self.p_losses(img, t, *args, **kwargs)
 
 # trainer class
+class SimCLR(nn.Module):
+    def __init__(self):
+        super().__init__()
+        resnet = torchvision.models.resnet18(weights='IMAGENET1K_V1')
+        self.backbone = nn.Sequential(*list(resnet.children())[:-1])
+    def forward(self, x):
+        x = self.backbone(x)
+        x = x.flatten(start_dim=1)
+        x = torch.unsqueeze(x, 1)
+        return x
 
 class Trainer1D(object):
     def __init__(
@@ -726,7 +736,7 @@ class Trainer1D(object):
             split_batches = split_batches,
             mixed_precision = 'fp16' if fp16 else 'no'
         )
-
+        self.encoder_FM = SimCLR()
         self.accelerator.native_amp = amp
 
         # model
@@ -826,6 +836,7 @@ class Trainer1D(object):
                     data = next(self.dl).to(device)
 
                     with self.accelerator.autocast():
+                        data = self.encoder_FM(data)
                         loss = self.model(data)
                         loss = loss / self.gradient_accumulate_every
                         total_loss += loss.item()

@@ -4,7 +4,7 @@ from pathlib import Path
 from random import random
 from functools import partial
 from collections import namedtuple
-
+import torchvision
 import torch
 from accelerate import Accelerator
 from ema_pytorch import EMA

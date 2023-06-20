@@ -41,6 +41,7 @@ def identity(t, *args, **kwargs):
 def cycle(dl):
     while True:
         for data in dl:
+            print(data)
             yield data
 
 def has_int_squareroot(num):
@@ -835,7 +836,7 @@ class Trainer1D(object):
                 total_loss = 0.
 
                 for _ in range(self.gradient_accumulate_every):
-                    data = next(self.dl)[0].to(device)
+                    data = next(self.dl).to(device)
 
                     with self.accelerator.autocast():
                         data = self.encoder_FM(data)

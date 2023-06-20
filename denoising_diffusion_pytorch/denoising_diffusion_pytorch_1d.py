@@ -698,6 +698,7 @@ class GaussianDiffusion1D(nn.Module):
         return self.p_losses(img, t, *args, **kwargs)
 
 # trainer class
+import torchvision
 class SimCLR(nn.Module):
     def __init__(self):
         super().__init__()

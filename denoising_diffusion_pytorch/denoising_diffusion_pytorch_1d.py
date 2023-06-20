@@ -836,8 +836,8 @@ class Trainer1D(object):
 
                 for _ in range(self.gradient_accumulate_every):
                     data = next(self.dl)
-                    print(data)
-                    data = data.to(device)
+                    #print(data)
+                    data = data[0].to(device)
 
                     with self.accelerator.autocast():
                         data = self.encoder_FM(data)
